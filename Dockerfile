@@ -7,15 +7,17 @@ WORKDIR /usr/src/app
 # Instala Nest CLI globalmente
 RUN npm install -g @nestjs/cli
 
-# Cria projeto NestJS se não existir
-RUN nest new app --package-manager npm --skip-git && \
-    cd app && npm install
+# Copia package.json e package-lock.json para instalar dependências
+COPY app/package*.json ./app/
 
 # Define diretório do projeto
 WORKDIR /usr/src/app/app
+
+# Atualiza os pacotes
+RUN npm install
 
 # Expõe a porta do NestJS
 EXPOSE 3000
 
 # Inicia o servidor em modo desenvolvimento
-CMD ["npm", "run", "start:dev"]
+CMD ["yarn", "start:dev"]
